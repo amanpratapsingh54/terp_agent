@@ -1,0 +1,86 @@
+[
+  {
+    "id": "h_001",
+    "type": "on_campus",
+    "name": "Oakland Hall",
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "rent_monthly": 1150,
+    "distance_to_iribe_min_walk": 8,
+    "amenities": ["study lounge", "a/c", "laundry"],
+    "availability": "Fall 2026",
+    "description": "Suite-style upper-class housing, central campus."
+  },
+  {
+    "id": "h_002",
+    "type": "on_campus",
+    "name": "South Campus Commons 7",
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "rent_monthly": 1050,
+    "distance_to_iribe_min_walk": 12,
+    "amenities": ["kitchen", "in-unit laundry", "a/c"],
+    "availability": "Fall 2026",
+    "description": "Apartment-style, CS-heavy community."
+  },
+  {
+    "id": "h_003",
+    "type": "off_campus",
+    "name": "The Standard at College Park",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "rent_monthly": 1350,
+    "distance_to_iribe_min_walk": 15,
+    "amenities": ["gym", "pool", "furnished", "coffee bar"],
+    "availability": "Aug 2026",
+    "description": "Modern off-campus building. Walkable."
+  },
+  {
+    "id": "h_004",
+    "type": "off_campus",
+    "name": "The View at College Park",
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "rent_monthly": 1100,
+    "distance_to_iribe_min_walk": 10,
+    "amenities": ["pool", "fitness center", "shuttle to campus"],
+    "availability": "Aug 2026",
+    "description": "Most CS students here are juniors+."
+  },
+  {
+    "id": "h_005",
+    "type": "off_campus",
+    "name": "Parkside Apartments — 4BR",
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "rent_monthly": 850,
+    "distance_to_iribe_min_walk": 22,
+    "amenities": ["kitchen", "parking"],
+    "availability": "Aug 2026",
+    "description": "Best price/sqft in College Park. Quieter grad-heavy area."
+  },
+  {
+    "id": "h_006",
+    "type": "off_campus",
+    "name": "Terrapin Row — 2BR",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "rent_monthly": 1400,
+    "distance_to_iribe_min_walk": 9,
+    "amenities": ["gym", "study lounge", "furnished"],
+    "availability": "Aug 2026",
+    "description": "Popular with juniors/seniors."
+  },
+  {
+    "id": "h_007",
+    "type": "off_campus",
+    "name": "Landmark College Park",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "rent_monthly": 1700,
+    "distance_to_iribe_min_walk": 7,
+    "amenities": ["gym", "pool", "furnished", "concierge"],
+    "availability": "Aug 2026",
+    "description": "Luxury studio/1BR. Closest to campus."
+  }
+]

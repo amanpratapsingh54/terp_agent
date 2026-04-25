@@ -1,0 +1,31 @@
+[
+  {
+    "id": "stu_001",
+    "name": "Aman Pratap",
+    "email": "97aman@terpmail.umd.edu",
+    "major": "Computer Science",
+    "minor": "Mathematics",
+    "year": "junior",
+    "gpa": 3.72,
+    "hometown": "New Delhi, India",
+    "interests": ["machine learning", "distributed systems", "chess", "indie music", "rock climbing", "startups"],
+    "skills": ["python", "pytorch", "react", "postgres", "aws", "go"],
+    "languages": ["English", "Hindi", "Punjabi"],
+    "completed_courses": ["CMSC131", "CMSC132", "CMSC216", "CMSC250", "CMSC330", "CMSC351", "MATH240", "MATH241", "STAT400"],
+    "current_courses": ["CMSC414", "CMSC422", "CMSC436", "MATH410"],
+    "goals": ["land ML research opportunity", "publish workshop paper", "secure SWE internship for summer 2027"],
+    "constraints": {
+      "no_classes_before": "09:30",
+      "max_weekly_work_hours": 15,
+      "budget_monthly_rent": 1100,
+      "vehicle": false
+    },
+    "friends": ["stu_014", "stu_027", "stu_033"],
+    "saved": {
+      "events": [],
+      "scholarships": [],
+      "housing": [],
+      "jobs": []
+    }
+  }
+]

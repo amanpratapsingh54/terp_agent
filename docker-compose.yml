@@ -1,0 +1,12 @@
+services:
+  terpagent:
+    build: .
+    image: terpagent:0.1.0
+    container_name: terpagent
+    ports:
+      - "8080:8080"
+    environment:
+      - TERP_DATA_DIR=/app/data
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data:ro

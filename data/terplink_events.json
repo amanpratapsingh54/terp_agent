@@ -1,0 +1,122 @@
+[
+  {
+    "id": "evt_001",
+    "title": "ACM@UMD Hack Night",
+    "org": "Association for Computing Machinery",
+    "category": "tech",
+    "start": "2026-04-24T18:00:00-04:00",
+    "end": "2026-04-24T22:00:00-04:00",
+    "location": "IRB 1116",
+    "tags": ["coding", "hackathon", "pizza", "ml", "networking"],
+    "rsvp_count": 87,
+    "description": "Drop-in hack night — bring a laptop, leave with a project. ML track and systems track this week."
+  },
+  {
+    "id": "evt_002",
+    "title": "Startup Shell Demo Night",
+    "org": "Startup Shell",
+    "category": "entrepreneurship",
+    "start": "2026-04-25T19:00:00-04:00",
+    "end": "2026-04-25T21:30:00-04:00",
+    "location": "Startup Shell HQ (basement of Cambridge Hall)",
+    "tags": ["startups", "pitch", "networking", "founders"],
+    "rsvp_count": 120,
+    "description": "10 member startups demo to the campus. Food + VC office hours after."
+  },
+  {
+    "id": "evt_003",
+    "title": "Climb Night — UMD ERC",
+    "org": "Terp Climbing Club",
+    "category": "club_sports",
+    "start": "2026-04-26T20:00:00-04:00",
+    "end": "2026-04-26T22:00:00-04:00",
+    "location": "Eppley Recreation Center — Climbing Wall",
+    "tags": ["rock climbing", "bouldering", "beginner friendly"],
+    "rsvp_count": 34,
+    "description": "Weekly climb. Shoes provided. First timers welcome."
+  },
+  {
+    "id": "evt_004",
+    "title": "Indie Music Night at MilkBoy",
+    "org": "Terps at MilkBoy ArtHouse",
+    "category": "arts",
+    "start": "2026-04-25T21:00:00-04:00",
+    "end": "2026-04-26T00:30:00-04:00",
+    "location": "MilkBoy ArtHouse, College Park",
+    "tags": ["indie", "live music", "off-campus", "21+"],
+    "rsvp_count": 52,
+    "description": "Local and touring indie acts. $5 w/ student ID."
+  },
+  {
+    "id": "evt_005",
+    "title": "Chess Club Weekly",
+    "org": "UMD Chess Club",
+    "category": "club",
+    "start": "2026-04-27T18:00:00-04:00",
+    "end": "2026-04-27T20:00:00-04:00",
+    "location": "STAMP Colony Ballroom",
+    "tags": ["chess", "casual", "all levels"],
+    "rsvp_count": 22,
+    "description": "Rapid games + blitz tournament. USCF-rated monthly."
+  },
+  {
+    "id": "evt_006",
+    "title": "AI4All Research Showcase",
+    "org": "MC2 — Maryland Cybersecurity Center",
+    "category": "academic",
+    "start": "2026-04-28T16:00:00-04:00",
+    "end": "2026-04-28T18:30:00-04:00",
+    "location": "Iribe Center Atrium",
+    "tags": ["ml", "research", "poster session", "food"],
+    "rsvp_count": 140,
+    "description": "Undergrad and grad research posters across ML, security, systems. Meet PIs hiring RAs for summer."
+  },
+  {
+    "id": "evt_007",
+    "title": "Bhangra at the Mall",
+    "org": "UMD Moksha",
+    "category": "cultural",
+    "start": "2026-04-26T15:00:00-04:00",
+    "end": "2026-04-26T17:00:00-04:00",
+    "location": "McKeldin Mall",
+    "tags": ["south asian", "dance", "cultural", "outdoor"],
+    "rsvp_count": 210,
+    "description": "Spring showcase, open to all."
+  },
+  {
+    "id": "evt_008",
+    "title": "SWE Career Coffee",
+    "org": "Career Center",
+    "category": "career",
+    "start": "2026-04-29T10:00:00-04:00",
+    "end": "2026-04-29T11:30:00-04:00",
+    "location": "Hornbake Library South Wing",
+    "tags": ["career", "swe", "resume review", "internship"],
+    "rsvp_count": 45,
+    "description": "Drop-in resume reviews with recruiters from Capital One, Amazon, Leidos."
+  },
+  {
+    "id": "evt_009",
+    "title": "Distributed Systems Reading Group",
+    "org": "Systems @ UMD",
+    "category": "academic",
+    "start": "2026-04-25T14:00:00-04:00",
+    "end": "2026-04-25T15:30:00-04:00",
+    "location": "IRB 4105",
+    "tags": ["distributed systems", "paper reading", "grad-friendly"],
+    "rsvp_count": 14,
+    "description": "This week: Spanner 2.0 retrospective. Paper distributed in advance."
+  },
+  {
+    "id": "evt_010",
+    "title": "Terps Go DC: Kennedy Center Night",
+    "org": "STAMP Student Union",
+    "category": "arts",
+    "start": "2026-05-02T18:30:00-04:00",
+    "end": "2026-05-02T23:00:00-04:00",
+    "location": "Kennedy Center (bus from Stamp)",
+    "tags": ["off-campus", "arts", "dc", "discounted"],
+    "rsvp_count": 40,
+    "description": "Subsidized tickets + round-trip bus. $15. Program: National Symphony."
+  }
+]

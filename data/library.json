@@ -1,0 +1,20 @@
+{
+  "rooms": [
+    {"id": "lib_r_001", "library": "McKeldin", "capacity": 4, "has_monitor": true, "has_whiteboard": true, "floor": 2},
+    {"id": "lib_r_002", "library": "McKeldin", "capacity": 6, "has_monitor": true, "has_whiteboard": true, "floor": 2},
+    {"id": "lib_r_003", "library": "McKeldin", "capacity": 2, "has_monitor": false, "has_whiteboard": true, "floor": 3},
+    {"id": "lib_r_004", "library": "STEM (EPSL)", "capacity": 6, "has_monitor": true, "has_whiteboard": true, "floor": 1},
+    {"id": "lib_r_005", "library": "Hornbake", "capacity": 8, "has_monitor": true, "has_whiteboard": true, "floor": 1},
+    {"id": "lib_r_006", "library": "Iribe Learning Commons", "capacity": 4, "has_monitor": true, "has_whiteboard": true, "floor": 2}
+  ],
+  "holds": [
+    {"id": "hld_001", "title": "Designing Data-Intensive Applications", "ready_by": "2026-04-25", "pickup": "McKeldin"},
+    {"id": "hld_002", "title": "The Art of Multiprocessor Programming", "ready_by": "2026-04-27", "pickup": "STEM"}
+  ],
+  "databases": [
+    {"id": "db_001", "name": "ACM Digital Library", "field": "cs", "url": "https://dl.acm.org"},
+    {"id": "db_002", "name": "IEEE Xplore", "field": "cs|ee", "url": "https://ieeexplore.ieee.org"},
+    {"id": "db_003", "name": "Web of Science", "field": "all", "url": "https://webofscience.com"}
+  ],
+  "bookings": []
+}

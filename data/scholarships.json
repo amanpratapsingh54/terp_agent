@@ -1,0 +1,68 @@
+[
+  {
+    "id": "sch_001",
+    "name": "President's Scholarship",
+    "amount": 12000,
+    "category": "merit",
+    "deadline": "2026-06-01",
+    "gpa_min": 3.5,
+    "eligibility": ["current UMD undergraduate", "min 60 credits"],
+    "tags": ["merit", "renewable"],
+    "description": "Renewable merit award for top undergraduates across all majors."
+  },
+  {
+    "id": "sch_002",
+    "name": "Dean's Scholarship — CMNS",
+    "amount": 5000,
+    "category": "major",
+    "deadline": "2026-05-15",
+    "gpa_min": 3.3,
+    "eligibility": ["CMNS major", "junior or senior", "one essay"],
+    "tags": ["cs", "math", "stat"],
+    "description": "Awarded to top CMNS students demonstrating research or leadership."
+  },
+  {
+    "id": "sch_003",
+    "name": "Goldwater Scholarship",
+    "amount": 7500,
+    "category": "research",
+    "deadline": "2026-11-10",
+    "gpa_min": 3.7,
+    "eligibility": ["sophomore or junior", "STEM research record", "faculty letter"],
+    "tags": ["national", "prestigious", "research"],
+    "description": "National merit award for STEM undergraduate researchers."
+  },
+  {
+    "id": "sch_004",
+    "name": "UMD International Student Grant",
+    "amount": 3500,
+    "category": "identity",
+    "deadline": "2026-05-20",
+    "gpa_min": 3.0,
+    "eligibility": ["F-1 visa", "financial need"],
+    "tags": ["international", "need"],
+    "description": "Need-based grant for international undergraduates."
+  },
+  {
+    "id": "sch_005",
+    "name": "Banatao Institute Founders Scholarship",
+    "amount": 6000,
+    "category": "entrepreneurship",
+    "deadline": "2026-05-30",
+    "gpa_min": 3.2,
+    "eligibility": ["student founder or core team member", "active startup"],
+    "tags": ["startups", "founders"],
+    "description": "For students building a venture while in school."
+  },
+  {
+    "id": "sch_006",
+    "name": "ACM Student Research Competition",
+    "amount": 1500,
+    "category": "research",
+    "deadline": "2026-07-01",
+    "gpa_min": null,
+    "eligibility": ["undergraduate or master's", "submit research abstract"],
+    "tags": ["cs", "research", "travel"],
+    "description": "Submit a research abstract; finalists get travel grant to ACM conferences."
+  }
+]

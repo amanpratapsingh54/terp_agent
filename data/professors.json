@@ -1,0 +1,98 @@
+[
+  {
+    "id": "prof_shi",
+    "name": "Elaine Shi",
+    "department": "CMSC",
+    "email": "elaine@umd.edu",
+    "research_fields": ["cryptography", "security", "zero-knowledge proofs", "distributed systems"],
+    "current_courses": ["CMSC414", "CMSC858"],
+    "takes_ugrad_researchers": true,
+    "rmp_score": 4.3,
+    "office": "IRB 4145",
+    "bio": "Research on applied crypto, ZK systems, blockchain. Very selective RA intake."
+  },
+  {
+    "id": "prof_daume",
+    "name": "Hal Daume III",
+    "department": "CMSC",
+    "email": "hal@umd.edu",
+    "research_fields": ["machine learning", "nlp", "low-resource mt", "fairness in ml"],
+    "current_courses": ["CMSC422", "CMSC828"],
+    "takes_ugrad_researchers": true,
+    "rmp_score": 4.6,
+    "office": "IRB 4222",
+    "bio": "CLIP Lab PI. Great mentor. Writes a popular ML textbook."
+  },
+  {
+    "id": "prof_porter",
+    "name": "Don Porter",
+    "department": "CMSC",
+    "email": "porter@umd.edu",
+    "research_fields": ["operating systems", "systems security", "confidential computing"],
+    "current_courses": ["CMSC436", "CMSC818"],
+    "takes_ugrad_researchers": true,
+    "rmp_score": 4.1,
+    "office": "IRB 4108",
+    "bio": "Systems lab, SGX + containers."
+  },
+  {
+    "id": "prof_grove",
+    "name": "Karsten Grove",
+    "department": "MATH",
+    "email": "kgrove@umd.edu",
+    "research_fields": ["differential geometry"],
+    "current_courses": ["MATH410", "MATH740"],
+    "takes_ugrad_researchers": false,
+    "rmp_score": 4.0,
+    "office": "MTH 3103",
+    "bio": "Classic real analysis instructor. Tough but fair."
+  },
+  {
+    "id": "prof_hicks",
+    "name": "Michael Hicks",
+    "department": "CMSC",
+    "email": "mwh@umd.edu",
+    "research_fields": ["programming languages", "software security", "formal verification"],
+    "current_courses": ["CMSC330", "CMSC631"],
+    "takes_ugrad_researchers": true,
+    "rmp_score": 4.7,
+    "office": "IRB 4129",
+    "bio": "PL/security. Famously friendly to undergrads doing research."
+  },
+  {
+    "id": "prof_khuller",
+    "name": "Samir Khuller",
+    "department": "CMSC",
+    "email": "samir@umd.edu",
+    "research_fields": ["algorithms", "combinatorial optimization"],
+    "current_courses": ["CMSC351"],
+    "takes_ugrad_researchers": true,
+    "rmp_score": 4.4,
+    "office": "IRB 4141",
+    "bio": "Classical algorithms, teaches the flagship 351."
+  },
+  {
+    "id": "prof_padua",
+    "name": "J. Padua",
+    "department": "CMSC",
+    "email": "jpadua@umd.edu",
+    "research_fields": ["cs education"],
+    "current_courses": ["CMSC131"],
+    "takes_ugrad_researchers": false,
+    "rmp_score": 4.5,
+    "office": "IRB 2210",
+    "bio": "Coordinates intro sequence."
+  },
+  {
+    "id": "prof_hanna",
+    "name": "M. Hanna",
+    "department": "CMSC",
+    "email": "mhanna@umd.edu",
+    "research_fields": ["cs education", "discrete math"],
+    "current_courses": ["CMSC250"],
+    "takes_ugrad_researchers": false,
+    "rmp_score": 4.2,
+    "office": "IRB 2220",
+    "bio": "Coordinates discrete structures."
+  }
+]

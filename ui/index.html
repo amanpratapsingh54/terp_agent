@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TerpAgent — UMD</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          umdred: { 50:'#fff1f2', 100:'#ffe4e6', 400:'#fb7185', 500:'#e03131', 600:'#c52128', 700:'#9b1a1f' },
+          umdgold:{ 50:'#fffbeb', 100:'#fef3c7', 400:'#fbbf24', 500:'#f5b800', 600:'#d69e00' },
+          ink: { 900:'#0f172a', 800:'#1e293b', 700:'#334155', 500:'#64748b', 400:'#94a3b8' }
+        },
+        fontFamily: {
+          sans: ['ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Helvetica Neue','Arial']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { background:#f8fafc; }
+  .chip { display:inline-flex; align-items:center; gap:.25rem; padding:.125rem .5rem; font-size:.72rem; border-radius:9999px; background:#f1f5f9; color:#334155; }
+  .chip-gold { background:#fef3c7; color:#92400e; }
+  .chip-red  { background:#ffe4e6; color:#9b1a1f; }
+  .chip-green{ background:#dcfce7; color:#166534; }
+  .chip-blue { background:#dbeafe; color:#1e40af; }
+  .card { background:white; border:1px solid #e5e7eb; border-radius:12px; }
+  .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .8rem; font-size:.85rem; font-weight:500; border-radius:8px; transition:all .15s; }
+  .btn-primary { background:#9b1a1f; color:white; }
+  .btn-primary:hover { background:#c52128; }
+  .btn-ghost { background:#f1f5f9; color:#334155; }
+  .btn-ghost:hover { background:#e2e8f0; }
+  .nav-item { display:flex; align-items:center; gap:.6rem; padding:.55rem .75rem; border-radius:8px; color:#475569; font-size:.88rem; cursor:pointer; user-select:none; }
+  .nav-item:hover { background:#f1f5f9; }
+  .nav-item.active { background:#9b1a1f; color:white; }
+  .nav-item.active .icon { opacity:1; }
+  .icon { width:1.1rem; height:1.1rem; flex:none; opacity:.7; }
+  .score-bar { height:6px; background:#f1f5f9; border-radius:9999px; overflow:hidden; }
+  .score-bar > div { height:100%; background:linear-gradient(90deg,#f5b800,#c52128); }
+  details > summary { list-style:none; cursor:pointer; }
+  details > summary::-webkit-details-marker { display:none; }
+  .loader { border:2px solid #e2e8f0; border-top-color:#9b1a1f; border-radius:9999px; width:16px; height:16px; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .toast { animation: slideIn .25s ease-out; }
+  @keyframes slideIn { from { transform:translateY(8px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+  /* Testudo chat widget */
+  .testudo-fab {
+    position: fixed; right: 24px; bottom: 24px; z-index: 40;
+    width: 60px; height: 60px; border-radius: 9999px;
+    background: linear-gradient(135deg, #9b1a1f 0%, #c52128 60%, #f5b800 140%);
+    box-shadow: 0 10px 25px -5px rgba(155,26,31,.4), 0 6px 10px -6px rgba(0,0,0,.2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .testudo-fab:hover { transform: scale(1.06); box-shadow: 0 14px 30px -5px rgba(155,26,31,.5); }
+  .testudo-fab .shell { width: 34px; height: 34px; }
+  .testudo-panel {
+    position: fixed; right: 24px; bottom: 24px; z-index: 41;
+    width: 420px; height: 620px; max-height: calc(100vh - 48px);
+    background: white; border-radius: 16px; border: 1px solid #e5e7eb;
+    box-shadow: 0 20px 50px -10px rgba(0,0,0,.25);
+    display: flex; flex-direction: column; overflow: hidden;
+    animation: slideIn .2s ease-out;
+  }
+  .testudo-header {
+    background: linear-gradient(135deg, #9b1a1f, #c52128);
+    color: white; padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .testudo-header .shell { width: 32px; height: 32px; }
+  .testudo-body { flex: 1; overflow-y: auto; padding: 14px; background: #f8fafc; }
+  .testudo-msg { max-width: 85%; padding: 10px 12px; border-radius: 12px; font-size: .88rem; line-height: 1.45; }
+  .testudo-msg.user { background: #9b1a1f; color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+  .testudo-msg.assistant { background: white; border: 1px solid #e5e7eb; color: #1e293b; margin-right: auto; border-bottom-left-radius: 4px; }
+  .testudo-msg a { color: inherit; text-decoration: underline; }
+  .testudo-msg strong { font-weight: 600; }
+  .testudo-msg em { font-style: italic; color: inherit; opacity: .85; }
+  .testudo-msg code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; font-size: .8em; }
+  .testudo-msg ul { margin-top: 4px; padding-left: 1rem; }
+  .testudo-msg li { list-style: disc; }
+  .testudo-msg blockquote { border-left: 3px solid #f5b800; padding-left: 8px; margin: 6px 0; color: #334155; font-size: .82rem; }
+  .testudo-action {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .7rem; padding: 2px 8px; border-radius: 9999px;
+    background: #fef3c7; color: #92400e; margin-right: 4px; margin-top: 6px;
+    border: 1px solid #fde68a;
+  }
+  .testudo-typing { display: flex; gap: 4px; padding: 12px 14px; background: white; border: 1px solid #e5e7eb; border-radius: 12px; width: fit-content; margin-right: auto; }
+  .testudo-typing span { width: 6px; height: 6px; border-radius: 9999px; background: #9b1a1f; opacity: .4; animation: bounce 1.2s infinite; }
+  .testudo-typing span:nth-child(2){ animation-delay:.15s; }
+  .testudo-typing span:nth-child(3){ animation-delay:.3s; }
+  @keyframes bounce { 0%,80%,100%{ transform:translateY(0); opacity:.4; } 40%{ transform:translateY(-4px); opacity:1; } }
+  .testudo-input { padding: 10px 12px; border-top: 1px solid #e5e7eb; background: white; display:flex; gap:8px; }
+  .testudo-input input { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: .9rem; outline: none; }
+  .testudo-input input:focus { border-color: #9b1a1f; }
+  .testudo-input button { background: #9b1a1f; color: white; border: none; border-radius: 8px; padding: 0 14px; cursor: pointer; font-weight: 500; }
+  .testudo-input button:hover { background: #c52128; }
+  .testudo-chips { display:flex; gap: 6px; flex-wrap: wrap; padding: 8px 12px 0; background: white; border-top: 1px solid #f1f5f9; }
+  .testudo-chip { font-size: .72rem; padding: 4px 10px; border-radius: 9999px; background: #f1f5f9; color: #334155; cursor: pointer; border: 1px solid transparent; }
+  .testudo-chip:hover { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+</style>
+</head>
+<body class="text-ink-800">
+
+<div id="toast-root" class="fixed top-6 right-6 z-50 space-y-2"></div>
+
+<!-- Testudo chat widget -->
+<div id="testudo-root"></div>
+
+<div class="min-h-screen grid" style="grid-template-columns: 260px 1fr;">
+
+  <!-- Sidebar -->
+  <aside class="bg-white border-r border-slate-200 p-4 flex flex-col">
+    <div class="flex items-center gap-2 mb-6 px-1">
+      <div class="w-9 h-9 rounded-lg bg-umdred-700 text-white flex items-center justify-center font-bold">T</div>
+      <div>
+        <div class="font-semibold leading-4">TerpAgent</div>
+        <div class="text-xs text-ink-500">UMD · College Park</div>
+      </div>
+    </div>
+
+    <nav id="nav" class="space-y-1">
+      <!-- populated by JS -->
+    </nav>
+
+    <div class="mt-auto pt-4 border-t border-slate-200">
+      <div id="profile-mini" class="px-1 text-sm">
+        <div class="flex items-center gap-2">
+          <div class="loader"></div><span class="text-ink-500">Loading profile…</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="p-6 max-w-6xl w-full">
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <h1 id="page-title" class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p id="page-subtitle" class="text-ink-500 text-sm mt-1">Your day, synthesized.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="refresh()" class="btn btn-ghost">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582M20 20v-5h-.581M5.5 13a7 7 0 0011.662 3.13M18.5 11a7 7 0 00-11.662-3.13" /></svg>
+          Refresh
+        </button>
+        <a href="/docs" target="_blank" class="btn btn-ghost">API docs ↗</a>
+      </div>
+    </header>
+
+    <div id="view" class="space-y-4"><!-- rendered by JS --></div>
+  </main>
+</div>
+
+<script>
+const API = ""; // same origin
+
+const state = {
+  view: "dashboard",
+  student: null,
+};
+
+// ---------------- nav ----------------
+const NAV = [
+  { id:"dashboard",   label:"Dashboard",   icon: svgIcon("M3 12l2-2m0 0l7-7 7 7m-9 9V10h4v11") },
+  { id:"classes",     label:"Classes",     icon: svgIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253") },
+  { id:"events",      label:"Events",      icon: svgIcon("M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z") },
+  { id:"jobs",        label:"TA / RA / Jobs", icon: svgIcon("M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z") },
+  { id:"handshake",   label:"Internships", icon: svgIcon("M13 10V3L4 14h7v7l9-11h-7z") },
+  { id:"scholarships",label:"Scholarships",icon: svgIcon("M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z") },
+  { id:"housing",     label:"Housing",     icon: svgIcon("M3 12l2-2m0 0l7-7 7 7m-9 9V10h4v11m-7 0h14a2 2 0 002-2V10") },
+  { id:"friends",     label:"Friends & Groups", icon: svgIcon("M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z") },
+  { id:"professors",  label:"Professors",  icon: svgIcon("M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z") },
+  { id:"library",     label:"Library",     icon: svgIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253") },
+  { id:"travel",      label:"Travel",      icon: svgIcon("M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z") },
+];
+
+function svgIcon(d) {
+  return `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${d}"/></svg>`;
+}
+
+function renderNav() {
+  const nav = document.getElementById("nav");
+  nav.innerHTML = NAV.map(n => `
+    <div class="nav-item ${state.view===n.id?'active':''}" onclick="go('${n.id}')">
+      ${n.icon}<span>${n.label}</span>
+    </div>`).join("");
+}
+
+function go(id) {
+  state.view = id;
+  renderNav();
+  render();
+}
+
+// ---------------- utilities ----------------
+async function api(path, opts={}) {
+  const r = await fetch(API + path, { headers:{"content-type":"application/json"}, ...opts });
+  if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
+  if (r.status === 204) return null;
+  return r.json();
+}
+
+function toast(msg, kind="success") {
+  const root = document.getElementById("toast-root");
+  const el = document.createElement("div");
+  el.className = `toast card px-4 py-3 text-sm shadow-md border-l-4 ${kind==='success'?'border-green-500':'border-umdred-600'}`;
+  el.textContent = msg;
+  root.appendChild(el);
+  setTimeout(()=> el.remove(), 3200);
+}
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleString(undefined, { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+}
+
+function daysUntil(iso) {
+  const ms = new Date(iso) - new Date();
+  return Math.floor(ms / 86400000);
+}
+
+function scoreBar(score) {
+  const pct = Math.round((score ?? 0) * 100);
+  return `<div class="flex items-center gap-2 w-28">
+    <div class="score-bar flex-1"><div style="width:${pct}%"></div></div>
+    <span class="text-xs text-ink-500 tabular-nums w-8 text-right">${pct}%</span>
+  </div>`;
+}
+
+function whyList(arr) {
+  if (!arr?.length) return "";
+  return `<ul class="text-xs text-ink-500 mt-1 space-y-0.5">` +
+    arr.map(w => `<li class="flex items-start gap-1"><span class="text-umdred-500">·</span>${w}</li>`).join("") +
+    `</ul>`;
+}
+
+function blockersList(arr) {
+  if (!arr?.length) return "";
+  return `<div class="mt-1 flex flex-wrap gap-1">` +
+    arr.map(b => `<span class="chip chip-red">${b}</span>`).join("") +
+    `</div>`;
+}
+
+function setHeader(title, subtitle) {
+  document.getElementById("page-title").textContent = title;
+  document.getElementById("page-subtitle").textContent = subtitle;
+}
+
+// ---------------- profile ----------------
+async function loadProfile() {
+  state.student = await api("/me");
+  document.getElementById("profile-mini").innerHTML = `
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-umdgold-500 text-ink-900 flex items-center justify-center text-xs font-semibold">
+        ${state.student.name.split(' ').map(s=>s[0]).join('').slice(0,2)}
+      </div>
+      <div class="leading-tight">
+        <div class="text-sm font-medium">${state.student.name}</div>
+        <div class="text-xs text-ink-500">${state.student.major} · ${state.student.year}</div>
+      </div>
+    </div>`;
+}
+
+// ---------------- views ----------------
+async function render() {
+  const v = document.getElementById("view");
+  v.innerHTML = `<div class="flex items-center gap-2 text-ink-500"><div class="loader"></div>Loading…</div>`;
+  try {
+    if (state.view==='dashboard')    return await viewDashboard(v);
+    if (state.view==='classes')      return await viewClasses(v);
+    if (state.view==='events')       return await viewEvents(v);
+    if (state.view==='jobs')         return await viewJobs(v);
+    if (state.view==='handshake')    return await viewHandshake(v);
+    if (state.view==='scholarships') return await viewScholarships(v);
+    if (state.view==='housing')      return await viewHousing(v);
+    if (state.view==='friends')      return await viewFriends(v);
+    if (state.view==='professors')   return await viewProfs(v);
+    if (state.view==='library')      return await viewLibrary(v);
+    if (state.view==='travel')       return await viewTravel(v);
+  } catch (e) {
+    v.innerHTML = `<div class="card p-4 border-l-4 border-umdred-600">
+      <div class="font-medium">Error</div><div class="text-sm text-ink-500 mt-1">${e.message}</div></div>`;
+  }
+}
+
+// Dashboard: parallel fetch + synthesize
+async function viewDashboard(v) {
+  setHeader(`Hi, ${state.student.name.split(' ')[0]}`, "Your day, synthesized.");
+  const [assignments, eventMatches, commitments] = await Promise.all([
+    api("/canvas/assignments?due_within=7d"),
+    api("/terplink/events/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 3 }) }),
+    api("/me/commitments"),
+  ]);
+
+  const urgent = assignments.filter(a => daysUntil(a.due_at) <= 2);
+
+  v.innerHTML = `
+    <!-- KPI row -->
+    <div class="grid grid-cols-4 gap-3">
+      ${kpi("Due in 48h", urgent.length, urgent.length>0 ? 'red' : 'green')}
+      ${kpi("This week", assignments.length, 'gold')}
+      ${kpi("Saved events", (commitments.events||[]).length, 'blue')}
+      ${kpi("Tracked apps", (commitments.scholarships||[]).length + (commitments.jobs||[]).length, 'blue')}
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Deadlines -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold">Deadlines</h3>
+          <button onclick="go('classes')" class="text-xs text-umdred-600 hover:underline">See all</button>
+        </div>
+        ${assignments.slice(0,5).map(a => `
+          <div class="py-2 border-b border-slate-100 last:border-0 flex items-start justify-between">
+            <div>
+              <div class="text-sm font-medium">${a.title}</div>
+              <div class="text-xs text-ink-500">${a.course_code} · ${fmtDate(a.due_at)}</div>
+            </div>
+            <span class="chip ${daysUntil(a.due_at)<=1 ? 'chip-red' : daysUntil(a.due_at)<=3 ? 'chip-gold' : ''}">
+              ${daysUntil(a.due_at)<0 ? 'overdue' : `${daysUntil(a.due_at)}d`}
+            </span>
+          </div>`).join("") || `<div class="text-sm text-ink-500">All clear 🎉</div>`}
+      </div>
+
+      <!-- Recommended events -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold">For you this week</h3>
+          <button onclick="go('events')" class="text-xs text-umdred-600 hover:underline">See all</button>
+        </div>
+        ${eventMatches.map(m => `
+          <div class="py-2 border-b border-slate-100 last:border-0">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex-1">
+                <div class="text-sm font-medium">${m.item.title}</div>
+                <div class="text-xs text-ink-500">${fmtDate(m.item.start)} · ${m.item.location}</div>
+                ${whyList(m.why)}
+              </div>
+              ${scoreBar(m.score)}
+            </div>
+            <div class="mt-2 flex gap-2">
+              <button onclick="rsvp('${m.item.id}')" class="btn btn-primary text-xs">RSVP</button>
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <!-- Profile card -->
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Your profile snapshot</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div class="text-ink-500 text-xs uppercase tracking-wide mb-1">Current courses</div>
+          ${(state.student.current_courses||[]).map(c=>`<span class="chip mr-1">${c}</span>`).join("")}
+        </div>
+        <div>
+          <div class="text-ink-500 text-xs uppercase tracking-wide mb-1">Interests</div>
+          ${(state.student.interests||[]).map(i=>`<span class="chip chip-gold mr-1">${i}</span>`).join("")}
+        </div>
+        <div>
+          <div class="text-ink-500 text-xs uppercase tracking-wide mb-1">Skills</div>
+          ${(state.student.skills||[]).map(s=>`<span class="chip chip-blue mr-1">${s}</span>`).join("")}
+        </div>
+        <div>
+          <div class="text-ink-500 text-xs uppercase tracking-wide mb-1">Goals</div>
+          <ul class="text-sm space-y-1">${(state.student.goals||[]).map(g=>`<li>· ${g}</li>`).join("")}</ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function kpi(label, value, tone) {
+  const color = { red:"text-umdred-600", gold:"text-umdgold-600", green:"text-green-600", blue:"text-blue-600" }[tone] || "";
+  return `<div class="card p-4">
+    <div class="text-xs text-ink-500 uppercase tracking-wide">${label}</div>
+    <div class="text-2xl font-semibold mt-1 ${color}">${value}</div>
+  </div>`;
+}
+
+// Classes
+async function viewClasses(v) {
+  setHeader("Classes", "Your enrolled courses, upcoming assignments, and announcements.");
+  const [courses, assignments, announcements] = await Promise.all([
+    api("/canvas/courses"),
+    api("/canvas/assignments?due_within=30d"),
+    api("/canvas/announcements"),
+  ]);
+
+  v.innerHTML = `
+    <div class="grid grid-cols-2 gap-4">
+      ${courses.map(c => `
+        <div class="card p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-semibold">${c.code} — ${c.title}</div>
+              <div class="text-xs text-ink-500 mt-0.5">${c.meeting_days.join('/')} ${c.meeting_time} · ${c.room}</div>
+            </div>
+            <span class="chip">${c.credits} cr</span>
+          </div>
+          <div class="mt-3 text-sm">
+            ${c.assignments.filter(a=>!a.submitted).slice(0,3).map(a=>`
+              <div class="flex items-center justify-between py-1">
+                <span>${a.title}</span>
+                <span class="chip ${daysUntil(a.due_at)<=2?'chip-red':''}">${fmtDate(a.due_at)}</span>
+              </div>`).join("") || `<div class="text-ink-500 text-xs">no open assignments</div>`}
+          </div>
+        </div>`).join("")}
+    </div>
+
+    ${announcements.length ? `
+      <div class="card p-5">
+        <h3 class="font-semibold mb-3">Recent announcements</h3>
+        ${announcements.map(a=>`
+          <div class="py-2 border-b border-slate-100 last:border-0">
+            <div class="text-sm font-medium">${a.title} <span class="chip ml-2">${a.course_code}</span></div>
+            <div class="text-xs text-ink-500">${fmtDate(a.posted_at)}</div>
+            <div class="text-sm mt-1">${a.body}</div>
+          </div>`).join("")}
+      </div>` : ""}
+  `;
+}
+
+// Events
+async function viewEvents(v) {
+  setHeader("Events", "Ranked by your profile. Filter by category for raw browsing.");
+  const [matches, all] = await Promise.all([
+    api("/terplink/events/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 5 }) }),
+    api("/terplink/events"),
+  ]);
+  v.innerHTML = `
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Top matches this week</h3>
+      ${matches.map(m => `
+        <div class="py-3 border-b border-slate-100 last:border-0 flex items-start gap-4">
+          <div class="flex-1">
+            <div class="text-sm font-medium">${m.item.title}</div>
+            <div class="text-xs text-ink-500">${fmtDate(m.item.start)} · ${m.item.location} · ${m.item.org}</div>
+            ${whyList(m.why)}
+            <div class="mt-2">${(m.item.tags||[]).slice(0,5).map(t=>`<span class="chip mr-1">${t}</span>`).join("")}</div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            ${scoreBar(m.score)}
+            <button onclick="rsvp('${m.item.id}')" class="btn btn-primary text-xs">RSVP</button>
+          </div>
+        </div>`).join("")}
+    </div>
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">All events</h3>
+      <div class="grid grid-cols-2 gap-2 text-sm">
+        ${all.map(e => `
+          <div class="p-2 rounded hover:bg-slate-50 border border-transparent">
+            <div class="font-medium">${e.title}</div>
+            <div class="text-xs text-ink-500">${fmtDate(e.start)} · ${e.category}</div>
+          </div>`).join("")}
+      </div>
+    </div>`;
+}
+
+async function rsvp(id) {
+  await api("/terplink/rsvp", { method:"POST", body: JSON.stringify({ id, student_id: state.student.id }) });
+  toast("RSVP confirmed");
+}
+
+// Jobs (TA/RA/part-time)
+async function viewJobs(v) {
+  setHeader("TA / RA / Campus jobs", "Ranked against your completed courses, GPA, and interests.");
+  const [ta, ra, pt] = await Promise.all([
+    api("/jobs/ta/match",{ method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 5 }) }),
+    api("/jobs/ra/match",{ method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 5 }) }),
+    api("/jobs/part_time"),
+  ]);
+  v.innerHTML = `
+    ${matchSection("TA positions", ta, (p)=>`${p.course_code} — ${p.course_title}`, (p)=>`$${p.pay_hourly}/hr · ${p.hours_per_week}h/wk · apply by ${p.deadline}`)}
+    ${matchSection("RA positions", ra, (p)=>`${p.lab || p.field} (${p.field})`, (p)=>`$${p.pay_hourly}/hr · ${p.hours_per_week}h/wk · ${p.semester}`)}
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Campus part-time</h3>
+      ${pt.map(p=>`
+        <div class="py-2 border-b border-slate-100 last:border-0 flex items-start justify-between">
+          <div>
+            <div class="text-sm font-medium">${p.role} — ${p.department}</div>
+            <div class="text-xs text-ink-500">$${p.pay_hourly}/hr · ${p.hours_per_week}h/wk · apply by ${p.deadline}</div>
+            <div class="text-xs mt-1">${p.description}</div>
+          </div>
+          <button onclick="applyJob('${p.id}')" class="btn btn-ghost text-xs">Save</button>
+        </div>`).join("")}
+    </div>`;
+}
+
+function matchSection(title, matches, titleFn, subFn) {
+  return `<div class="card p-5">
+    <h3 class="font-semibold mb-3">${title}</h3>
+    ${matches.map(m=>`
+      <div class="py-3 border-b border-slate-100 last:border-0 flex items-start gap-4">
+        <div class="flex-1">
+          <div class="text-sm font-medium">${titleFn(m.item)}</div>
+          <div class="text-xs text-ink-500">${subFn(m.item)}</div>
+          ${whyList(m.why)}
+          ${blockersList(m.blockers)}
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          ${scoreBar(m.score)}
+          <button onclick="applyJob('${m.item.id}')" class="btn btn-primary text-xs" ${m.blockers?.length ? 'disabled title="blocked"' : ''}>Apply</button>
+        </div>
+      </div>`).join("") || `<div class="text-sm text-ink-500">No matches yet.</div>`}
+  </div>`;
+}
+
+async function applyJob(id) {
+  await api("/jobs/apply", { method:"POST", body: JSON.stringify({ id, student_id: state.student.id }) });
+  toast("Saved to your tracker");
+}
+
+// Handshake
+async function viewHandshake(v) {
+  setHeader("Internships & full-time", "Handshake postings, ranked.");
+  const matches = await api("/handshake/jobs/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 8 }) });
+  v.innerHTML = `<div class="card p-5">
+    ${matches.map(m=>`
+      <div class="py-3 border-b border-slate-100 last:border-0 flex items-start gap-4">
+        <div class="flex-1">
+          <div class="text-sm font-medium">${m.item.title} — ${m.item.company}</div>
+          <div class="text-xs text-ink-500">${m.item.location} · ${m.item.type} · ${m.item.pay_hourly?`$${m.item.pay_hourly}/hr`:`$${m.item.salary_annual}/yr`} · deadline ${m.item.deadline}</div>
+          ${whyList(m.why)}
+          ${blockersList(m.blockers)}
+          <div class="mt-2">${(m.item.tags||[]).map(t=>`<span class="chip mr-1">${t}</span>`).join("")}</div>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          ${scoreBar(m.score)}
+          <button onclick="applyHS('${m.item.id}')" class="btn btn-primary text-xs" ${m.blockers?.length ? 'disabled' : ''}>Save</button>
+        </div>
+      </div>`).join("")}
+  </div>`;
+}
+
+async function applyHS(id) {
+  await api("/handshake/jobs/apply", { method:"POST", body: JSON.stringify({ id, student_id: state.student.id }) });
+  toast("Queued in your Handshake tracker");
+}
+
+// Scholarships
+async function viewScholarships(v) {
+  setHeader("Scholarships", "Ranked by eligibility and urgency.");
+  const matches = await api("/scholarships/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 8 }) });
+  v.innerHTML = `<div class="card p-5">
+    ${matches.map(m=>`
+      <div class="py-3 border-b border-slate-100 last:border-0 flex items-start gap-4">
+        <div class="flex-1">
+          <div class="text-sm font-medium">${m.item.name} — $${m.item.amount.toLocaleString()}</div>
+          <div class="text-xs text-ink-500">${m.item.category} · deadline ${m.item.deadline}</div>
+          <div class="text-xs mt-1">${m.item.description}</div>
+          ${whyList(m.why)}
+          ${blockersList(m.blockers)}
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          ${scoreBar(m.score)}
+          <button onclick="trackSch('${m.item.id}')" class="btn btn-primary text-xs">Track</button>
+        </div>
+      </div>`).join("")}
+  </div>`;
+}
+
+async function trackSch(id) {
+  await api("/scholarships/track", { method:"POST", body: JSON.stringify({ id, student_id: state.student.id }) });
+  toast("Added to tracker");
+}
+
+// Housing
+async function viewHousing(v) {
+  setHeader("Housing", "Matched to your budget, car status, and walk distance to Iribe.");
+  const matches = await api("/housing/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 8 }) });
+  v.innerHTML = `<div class="grid grid-cols-2 gap-3">
+    ${matches.map(m=>`
+      <div class="card p-4">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="font-medium">${m.item.name}</div>
+            <div class="text-xs text-ink-500">${m.item.type} · ${m.item.bedrooms}BR / ${m.item.bathrooms}BA · ${m.item.distance_to_iribe_min_walk} min walk</div>
+          </div>
+          <div class="text-right">
+            <div class="font-semibold">$${m.item.rent_monthly.toLocaleString()}</div>
+            <div class="text-xs text-ink-500">/mo</div>
+          </div>
+        </div>
+        <div class="mt-2">${(m.item.amenities||[]).slice(0,5).map(a=>`<span class="chip mr-1">${a}</span>`).join("")}</div>
+        ${whyList(m.why)}
+        ${blockersList(m.blockers)}
+        <div class="mt-3 flex items-center justify-between">
+          ${scoreBar(m.score)}
+          <button onclick="saveHousing('${m.item.id}')" class="btn btn-primary text-xs">Save</button>
+        </div>
+      </div>`).join("")}
+  </div>`;
+}
+
+async function saveHousing(id) {
+  await api("/housing/save", { method:"POST", body: JSON.stringify({ id, student_id: state.student.id }) });
+  toast("Saved to your shortlist");
+}
+
+// Friends + groups
+async function viewFriends(v) {
+  setHeader("Friends & Groups", "Classmates who share your classes, interests, or hometown.");
+  const [byInterest, byClasses, groups] = await Promise.all([
+    api("/social/friends/suggest?overlap=interests&limit=5", { method:"POST" }),
+    api("/social/friends/suggest?overlap=shared_classes&limit=5", { method:"POST" }),
+    api("/social/groups"),
+  ]);
+  v.innerHTML = `
+    <div class="grid grid-cols-2 gap-4">
+      ${friendsCol("Shared interests", byInterest)}
+      ${friendsCol("Shared classes", byClasses)}
+    </div>
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Groups</h3>
+      <div class="grid grid-cols-3 gap-2 text-sm">
+        ${groups.map(g=>`
+          <div class="p-3 border border-slate-200 rounded-lg">
+            <div class="font-medium">${g.name}</div>
+            <div class="text-xs text-ink-500">${g.topic} · ${g.members} members</div>
+            <div class="text-xs mt-1">${g.description}</div>
+            <button onclick="joinGroup('${g.id}')" class="btn btn-ghost text-xs mt-2">Join</button>
+          </div>`).join("")}
+      </div>
+    </div>`;
+}
+
+function friendsCol(title, matches) {
+  return `<div class="card p-5">
+    <h3 class="font-semibold mb-3">${title}</h3>
+    ${matches.map(m=>`
+      <div class="py-2 border-b border-slate-100 last:border-0 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-full bg-umdgold-500 text-ink-900 flex items-center justify-center text-xs font-semibold">
+          ${m.item.name.split(' ').map(n=>n[0]).join('').slice(0,2)}
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-medium">${m.item.name}</div>
+          <div class="text-xs text-ink-500">${m.item.major} · ${m.item.year}</div>
+          ${whyList(m.why)}
+        </div>
+        ${scoreBar(m.score)}
+      </div>`).join("")}
+  </div>`;
+}
+
+async function joinGroup(id) {
+  await api(`/social/groups/${id}/join?student_id=${state.student.id}`, { method:"POST" });
+  toast("Joined the group");
+}
+
+// Professors
+async function viewProfs(v) {
+  setHeader("Professors", "Best-fit profs for your interests — and a draftable outreach email.");
+  const matches = await api("/professors/match", { method:"POST", body: JSON.stringify({ student_id: state.student.id, limit: 6 }) });
+  v.innerHTML = `<div class="grid grid-cols-2 gap-3">
+    ${matches.map(m=>`
+      <div class="card p-4">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="font-medium">${m.item.name}</div>
+            <div class="text-xs text-ink-500">${m.item.department} · RMP ${m.item.rmp_score ?? '—'}</div>
+          </div>
+          ${scoreBar(m.score)}
+        </div>
+        <div class="mt-2">${(m.item.research_fields||[]).map(f=>`<span class="chip mr-1">${f}</span>`).join("")}</div>
+        <div class="text-xs mt-2 text-ink-500">${m.item.bio}</div>
+        ${whyList(m.why)}
+        <div class="mt-3 flex gap-2">
+          <button onclick="draftEmail('${m.item.id}')" class="btn btn-primary text-xs">Draft email</button>
+          <a href="mailto:${m.item.email}" class="btn btn-ghost text-xs">${m.item.email}</a>
+        </div>
+      </div>`).join("")}
+  </div>
+  <div id="draft-modal"></div>`;
+}
+
+async function draftEmail(profId) {
+  const e = await api(`/professors/draft_email?professor_id=${profId}&purpose=research&student_id=${state.student.id}`, { method:"POST" });
+  const modal = document.getElementById("draft-modal");
+  modal.innerHTML = `
+    <div class="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-6" onclick="if(event.target===this) this.remove()">
+      <div class="card p-6 w-full max-w-xl">
+        <h3 class="font-semibold mb-2">Email draft — ${e.professor}</h3>
+        <div class="text-xs text-ink-500 mb-2">To: ${e.to}</div>
+        <input class="w-full border border-slate-200 rounded px-3 py-2 text-sm mb-2" value="${e.subject.replace(/"/g,'&quot;')}" />
+        <textarea class="w-full border border-slate-200 rounded px-3 py-2 text-sm h-64 font-mono">${e.body}</textarea>
+        <div class="flex justify-end gap-2 mt-3">
+          <button class="btn btn-ghost text-sm" onclick="this.closest('.fixed').remove()">Close</button>
+          <button class="btn btn-primary text-sm" onclick="navigator.clipboard.writeText(document.querySelector('.fixed textarea').value); toast('Copied to clipboard')">Copy</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// Library
+async function viewLibrary(v) {
+  setHeader("Library", "Study rooms, holds, and databases.");
+  const [rooms, holds, dbs] = await Promise.all([api("/library/rooms"), api("/library/holds"), api("/library/databases")]);
+  v.innerHTML = `
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Rooms</h3>
+      <div class="grid grid-cols-3 gap-2 text-sm">
+        ${rooms.map(r=>`
+          <div class="p-3 border border-slate-200 rounded-lg">
+            <div class="font-medium">${r.library} — Floor ${r.floor}</div>
+            <div class="text-xs text-ink-500">Capacity ${r.capacity} ${r.has_monitor?' · monitor':''} ${r.has_whiteboard?' · whiteboard':''}</div>
+            <button onclick="bookRoom('${r.id}')" class="btn btn-ghost text-xs mt-2">Book 2pm–4pm tomorrow</button>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h3 class="font-semibold mb-3">Holds</h3>
+        ${holds.map(h=>`<div class="py-1 text-sm flex justify-between"><span>${h.title}</span><span class="chip">${h.pickup} · ${h.ready_by}</span></div>`).join("") || `<div class="text-sm text-ink-500">none</div>`}
+      </div>
+      <div class="card p-5">
+        <h3 class="font-semibold mb-3">Databases</h3>
+        ${dbs.map(d=>`<div class="py-1 text-sm"><a class="text-umdred-600 hover:underline" href="${d.url}" target="_blank">${d.name}</a> <span class="chip ml-1">${d.field}</span></div>`).join("")}
+      </div>
+    </div>`;
+}
+
+async function bookRoom(roomId) {
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1); tomorrow.setHours(14,0,0,0);
+  await api(`/library/book?room_id=${roomId}&start=${encodeURIComponent(tomorrow.toISOString())}&duration_min=120&student_id=${state.student.id}`, { method:"POST" });
+  toast("Room booked");
+}
+
+// Travel
+async function viewTravel(v) {
+  setHeader("Travel", "Nearby, transit, and weekend trips.");
+  const [nearby, transit, weekend] = await Promise.all([
+    api("/travel/nearby?radius_mi=35"),
+    api("/travel/transit"),
+    api("/travel/weekend_trips?max_hours=3"),
+  ]);
+  v.innerHTML = `
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h3 class="font-semibold mb-3">Nearby</h3>
+        ${nearby.map(p=>`
+          <div class="py-2 border-b border-slate-100 last:border-0 flex items-start justify-between">
+            <div>
+              <div class="text-sm font-medium">${p.name}</div>
+              <div class="text-xs text-ink-500">${p.category} · ${p.distance_mi} mi</div>
+              <div class="text-xs mt-1">${p.description}</div>
+            </div>
+          </div>`).join("")}
+      </div>
+      <div class="card p-5">
+        <h3 class="font-semibold mb-3">Weekend trips &lt;3h</h3>
+        ${weekend.map(t=>`
+          <div class="py-2 border-b border-slate-100 last:border-0">
+            <div class="text-sm font-medium">${t.name}</div>
+            <div class="text-xs text-ink-500">${t.drive_hours}h · ${t.highlights.join(' · ')}</div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div class="card p-5">
+      <h3 class="font-semibold mb-3">Transit</h3>
+      <table class="text-sm w-full">
+        <thead class="text-left text-ink-500 text-xs uppercase tracking-wide">
+          <tr><th class="py-1">From</th><th>To</th><th>Mode</th><th>Time</th><th class="text-right">Cost</th></tr>
+        </thead>
+        <tbody>${transit.map(t=>`<tr class="border-t border-slate-100">
+          <td class="py-1">${t.from}</td><td>${t.to}</td><td>${t.mode}</td><td>${t.travel_min} min</td><td class="text-right">${t.cost?`$${t.cost.toFixed(2)}`:'free'}</td>
+        </tr>`).join("")}</tbody>
+      </table>
+    </div>`;
+}
+
+// ---------------- Testudo chat widget ----------------
+const TESTUDO = {
+  open: false,
+  mode: null,           // "claude" | "heuristic" — fetched at boot
+  modelName: null,
+  messages: [
+    { role:"assistant", content:"Hey, I'm **Testudo** — your UMD agent. I can pull deadlines, plan your weekend, book library rooms, brief you on friends, draft outreach to profs, find scholarships, or rank TA/RA/internship fits. What's on your plate?" }
+  ],
+  chips: [
+    "What's due in CMSC414 this week?",
+    "Plan my weekend",
+    "Book a McKeldin room 2pm tomorrow for 2 hours",
+    "What's Priya doing Monday?",
+    "Best TA positions for fall",
+    "Scholarships I should apply to",
+    "Draft email to Prof. Daume",
+    "RSVP me to the Startup Shell demo",
+  ],
+  busy: false,
+};
+
+async function loadTestudoMode() {
+  try {
+    const m = await api("/agent/mode");
+    TESTUDO.mode = m.mode;
+    TESTUDO.modelName = m.model;
+  } catch { TESTUDO.mode = "heuristic"; }
+}
+
+const TURTLE_SVG = `
+  <svg class="shell" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="32" cy="36" rx="22" ry="16" fill="#f5b800" stroke="#9b1a1f" stroke-width="2.5"/>
+    <path d="M32 22 L24 30 L28 40 L36 40 L40 30 Z" fill="#9b1a1f" opacity=".35"/>
+    <circle cx="24" cy="33" r="2.5" fill="#9b1a1f" opacity=".35"/>
+    <circle cx="40" cy="33" r="2.5" fill="#9b1a1f" opacity=".35"/>
+    <circle cx="28" cy="42" r="2.5" fill="#9b1a1f" opacity=".35"/>
+    <circle cx="36" cy="42" r="2.5" fill="#9b1a1f" opacity=".35"/>
+    <circle cx="50" cy="30" r="5" fill="#fbbf24" stroke="#9b1a1f" stroke-width="2"/>
+    <circle cx="52" cy="29" r="1" fill="#111"/>
+    <rect x="12" y="44" width="6" height="8" rx="2" fill="#fbbf24" stroke="#9b1a1f" stroke-width="2"/>
+    <rect x="46" y="44" width="6" height="8" rx="2" fill="#fbbf24" stroke="#9b1a1f" stroke-width="2"/>
+  </svg>`;
+
+// Minimal markdown → HTML (bold **x**, italic _x_, code `x`, bullet lists, blockquotes).
+function md(src) {
+  const esc = s => s.replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const lines = src.split("\n");
+  let out = [];
+  let inList = false;
+  for (let ln of lines) {
+    let s = esc(ln);
+    s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/(^|[\s(])_(.+?)_([\s).,;:!?]|$)/g, "$1<em>$2</em>$3");
+    s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+    if (/^\s*[-*] /.test(ln)) {
+      if (!inList) { out.push("<ul>"); inList = true; }
+      out.push("<li>" + s.replace(/^\s*[-*] /, "") + "</li>");
+      continue;
+    }
+    if (inList) { out.push("</ul>"); inList = false; }
+    if (/^\s*> /.test(ln)) { out.push("<blockquote>" + s.replace(/^\s*> /, "") + "</blockquote>"); continue; }
+    if (ln.trim() === "") { out.push("<br/>"); continue; }
+    out.push("<div>" + s + "</div>");
+  }
+  if (inList) out.push("</ul>");
+  return out.join("");
+}
+
+function renderTestudo() {
+  const root = document.getElementById("testudo-root");
+  if (!TESTUDO.open) {
+    root.innerHTML = `
+      <div class="testudo-fab" onclick="toggleTestudo()" title="Chat with Testudo">
+        ${TURTLE_SVG}
+      </div>`;
+    return;
+  }
+  const msgs = TESTUDO.messages.map(m => {
+    const actionChips = (m.actions || []).map(a =>
+      `<div class="testudo-action">⚡ ${a.name}</div>`).join("");
+    return `<div class="testudo-msg ${m.role}">${md(m.content)}${actionChips ? `<div>${actionChips}</div>` : ''}</div>`;
+  }).join('<div class="h-2"></div>');
+
+  const typing = TESTUDO.busy ? `<div class="h-2"></div><div class="testudo-typing"><span></span><span></span><span></span></div>` : "";
+
+  const chips = TESTUDO.chips.map(c => `<div class="testudo-chip" onclick="askTestudo('${c.replace(/'/g,"\\'")}')">${c}</div>`).join("");
+
+  const modeLabel = TESTUDO.mode === "claude"
+    ? `Claude · ${(TESTUDO.modelName || '').replace(/-\d{8}$/,'')}`
+    : "heuristic mode (set ANTHROPIC_API_KEY for real LLM)";
+  root.innerHTML = `
+    <div class="testudo-panel">
+      <div class="testudo-header">
+        ${TURTLE_SVG}
+        <div class="flex-1">
+          <div class="font-semibold leading-tight">Testudo</div>
+          <div class="text-xs opacity-80">${modeLabel}</div>
+        </div>
+        <button onclick="toggleTestudo()" class="opacity-80 hover:opacity-100">✕</button>
+      </div>
+      <div class="testudo-body" id="testudo-body">
+        ${msgs}
+        ${typing}
+      </div>
+      <div class="testudo-chips">${chips}</div>
+      <form class="testudo-input" onsubmit="event.preventDefault(); submitTestudo()">
+        <input id="testudo-input" placeholder="Ask Testudo…" autocomplete="off" />
+        <button type="submit" ${TESTUDO.busy ? 'disabled' : ''}>Send</button>
+      </form>
+    </div>`;
+  const body = document.getElementById("testudo-body");
+  if (body) body.scrollTop = body.scrollHeight;
+  const input = document.getElementById("testudo-input");
+  if (input && !TESTUDO.busy) setTimeout(()=> input.focus(), 50);
+}
+
+function toggleTestudo() {
+  TESTUDO.open = !TESTUDO.open;
+  renderTestudo();
+}
+
+async function askTestudo(text) {
+  if (TESTUDO.busy || !text.trim()) return;
+  TESTUDO.messages.push({ role:"user", content: text });
+  TESTUDO.busy = true;
+  renderTestudo();
+  try {
+    const res = await api("/agent/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: TESTUDO.messages.filter(m => m.role !== "system").map(m => ({role:m.role, content:m.content})),
+        student_id: state.student?.id || "stu_001",
+      }),
+    });
+    TESTUDO.messages.push({ role:"assistant", content: res.reply, actions: res.actions || [] });
+    // refresh the dashboard if an action mutated state
+    if ((res.actions || []).some(a => ["book_room","rsvp_event","track_scholarship","apply_job","apply_handshake_job","save_housing","join_group"].includes(a.name))) {
+      if (state.view === "dashboard" || state.view === "events" || state.view === "library") render();
+    }
+  } catch (e) {
+    TESTUDO.messages.push({ role:"assistant", content: `I hit an error: ${e.message}` });
+  } finally {
+    TESTUDO.busy = false;
+    renderTestudo();
+  }
+}
+
+function submitTestudo() {
+  const input = document.getElementById("testudo-input");
+  const text = input.value;
+  input.value = "";
+  askTestudo(text);
+}
+
+// ---------------- boot ----------------
+async function boot() {
+  renderNav();
+  await loadProfile();
+  await loadTestudoMode();
+  await render();
+  renderTestudo();
+}
+function refresh(){ render(); toast("Refreshed"); }
+boot().catch(e => {
+  document.getElementById("view").innerHTML = `<div class="card p-4 border-l-4 border-umdred-600">
+    <div class="font-medium">Couldn't reach TerpAgent API</div>
+    <div class="text-sm text-ink-500 mt-1">${e.message}</div>
+    <div class="text-xs text-ink-500 mt-2">Make sure the server is running and serving this page from the same origin (uvicorn api.main:app --port 8080, then visit /app).</div>
+  </div>`;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+[
+  {"id": "grp_001", "name": "ACM@UMD", "topic": "tech", "members": 420, "description": "Flagship CS club. Hack nights, speaker series.", "join_url": "/social/groups/grp_001/join"},
+  {"id": "grp_002", "name": "Terrapin Hackers", "topic": "tech", "members": 180, "description": "Competitive hackathon team. Travels to MHacks/HackMIT."},
+  {"id": "grp_003", "name": "Startup Shell", "topic": "entrepreneurship", "members": 95, "description": "Student-run incubator. Must apply."},
+  {"id": "grp_004", "name": "UMD ML Club", "topic": "ml", "members": 210, "description": "Paper reading + project teams."},
+  {"id": "grp_005", "name": "Chess Club", "topic": "chess", "members": 60, "description": "USCF-rated monthly tourneys."},
+  {"id": "grp_006", "name": "Terp Climbing", "topic": "rock climbing", "members": 75, "description": "Weekly climbs at ERC + trips to Carderock."},
+  {"id": "grp_007", "name": "Moksha", "topic": "cultural", "members": 45, "description": "South Asian dance troupe."},
+  {"id": "grp_008", "name": "Terps on Sound", "topic": "indie music", "members": 130, "description": "Music discovery, concert group outings."},
+  {"id": "grp_009", "name": "Bitcamp Organizing", "topic": "tech", "members": 35, "description": "Runs UMD's flagship 36-hour hackathon."},
+  {"id": "grp_010", "name": "Distributed Systems Reading", "topic": "distributed systems", "members": 18, "description": "Weekly paper reading group, grad + strong undergrads."}
+]

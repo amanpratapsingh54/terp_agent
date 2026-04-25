@@ -1,0 +1,76 @@
+[
+  {
+    "id": "c_414",
+    "code": "CMSC414",
+    "title": "Computer and Network Security",
+    "professor_id": "prof_shi",
+    "ta_ids": ["ta_liu", "ta_patel"],
+    "meeting_days": ["Tue", "Thu"],
+    "meeting_time": "12:30-13:45",
+    "room": "IRB 1116",
+    "credits": 3,
+    "syllabus_url": "/canvas/courses/c_414/syllabus",
+    "student_ids": ["stu_001", "stu_014", "stu_033", "stu_042", "stu_051", "stu_067"],
+    "assignments": [
+      {"id": "a_414_p2", "title": "Project 2 — Crypto lab", "due_at": "2026-04-24T23:59:00-04:00", "submitted": false, "weight": 0.15},
+      {"id": "a_414_p3", "title": "Project 3 — Web exploits", "due_at": "2026-05-08T23:59:00-04:00", "submitted": false, "weight": 0.20},
+      {"id": "a_414_final", "title": "Final exam", "due_at": "2026-05-15T10:30:00-04:00", "submitted": false, "weight": 0.30}
+    ],
+    "announcements": [
+      {"id": "an_414_1", "posted_at": "2026-04-23T09:10:00-04:00", "title": "OH moved to Friday", "body": "Due to the hack night, OH moves to Fri 2-4 in IRB 4145."}
+    ]
+  },
+  {
+    "id": "c_422",
+    "code": "CMSC422",
+    "title": "Introduction to Machine Learning",
+    "professor_id": "prof_daume",
+    "ta_ids": ["ta_nguyen"],
+    "meeting_days": ["Mon", "Wed", "Fri"],
+    "meeting_time": "11:00-11:50",
+    "room": "CSI 2117",
+    "credits": 3,
+    "syllabus_url": "/canvas/courses/c_422/syllabus",
+    "student_ids": ["stu_001", "stu_027", "stu_042"],
+    "assignments": [
+      {"id": "a_422_hw4", "title": "HW4 — Neural nets from scratch", "due_at": "2026-04-28T23:59:00-04:00", "submitted": false, "weight": 0.10},
+      {"id": "a_422_proj", "title": "Final project report", "due_at": "2026-05-10T23:59:00-04:00", "submitted": false, "weight": 0.25}
+    ],
+    "announcements": []
+  },
+  {
+    "id": "c_436",
+    "code": "CMSC436",
+    "title": "Programming Handheld Systems",
+    "professor_id": "prof_porter",
+    "ta_ids": ["ta_chen"],
+    "meeting_days": ["Tue", "Thu"],
+    "meeting_time": "15:30-16:45",
+    "room": "CSI 3117",
+    "credits": 3,
+    "syllabus_url": "/canvas/courses/c_436/syllabus",
+    "student_ids": ["stu_001", "stu_019"],
+    "assignments": [
+      {"id": "a_436_app3", "title": "App 3 — Location-aware app", "due_at": "2026-05-01T23:59:00-04:00", "submitted": false, "weight": 0.15}
+    ],
+    "announcements": []
+  },
+  {
+    "id": "c_410",
+    "code": "MATH410",
+    "title": "Advanced Calculus I",
+    "professor_id": "prof_grove",
+    "ta_ids": [],
+    "meeting_days": ["Mon", "Wed", "Fri"],
+    "meeting_time": "13:00-13:50",
+    "room": "MTH 0103",
+    "credits": 4,
+    "syllabus_url": "/canvas/courses/c_410/syllabus",
+    "student_ids": ["stu_001"],
+    "assignments": [
+      {"id": "a_410_hw10", "title": "HW10 — Uniform continuity", "due_at": "2026-04-26T23:59:00-04:00", "submitted": true, "weight": 0.05},
+      {"id": "a_410_final", "title": "Final exam", "due_at": "2026-05-14T08:00:00-04:00", "submitted": false, "weight": 0.35}
+    ],
+    "announcements": []
+  }
+]

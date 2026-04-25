@@ -1,0 +1,28 @@
+{
+  "nearby": [
+    {"id": "tr_001", "name": "Lake Artemesia Loop", "category": "outdoors", "distance_mi": 1.2, "description": "Walking/biking loop, 15 min from campus."},
+    {"id": "tr_002", "name": "Busboys and Poets — Hyattsville", "category": "food", "distance_mi": 2.5, "description": "Brunch + live poetry nights."},
+    {"id": "tr_003", "name": "Brentwood Arts Exchange", "category": "culture", "distance_mi": 3.1, "description": "Small gallery + frequent openings."},
+    {"id": "tr_004", "name": "Franklin's Restaurant & Brewery", "category": "food", "distance_mi": 1.8, "description": "Hyattsville landmark. Great trivia nights."},
+    {"id": "tr_005", "name": "U Street — DC", "category": "nightlife", "distance_mi": 10.5, "description": "Live music, bars, food. Metro: Green line from College Park → U Street."},
+    {"id": "tr_006", "name": "National Mall", "category": "culture", "distance_mi": 10.8, "description": "Free museums. Metro: Green → L'Enfant Plaza."},
+    {"id": "tr_007", "name": "Rock Creek Park", "category": "outdoors", "distance_mi": 12.0, "description": "Extensive trails, good for a half-day trip."},
+    {"id": "tr_008", "name": "Annapolis City Dock", "category": "day_trip", "distance_mi": 30.0, "description": "Historic waterfront, ~40 min drive."},
+    {"id": "tr_009", "name": "Baltimore Inner Harbor", "category": "day_trip", "distance_mi": 32.0, "description": "Aquarium, Fells Point. MARC train from College Park."},
+    {"id": "tr_010", "name": "Great Falls Park", "category": "outdoors", "distance_mi": 22.0, "description": "Potomac river overlooks, hiking."}
+  ],
+  "transit": [
+    {"from": "College Park Metro", "to": "L'Enfant Plaza", "mode": "Metro Green Line", "travel_min": 25, "cost": 2.70},
+    {"from": "College Park Metro", "to": "U Street/Cardozo", "mode": "Metro Green Line", "travel_min": 20, "cost": 2.50},
+    {"from": "College Park MARC", "to": "Baltimore Penn Station", "mode": "MARC Camden", "travel_min": 55, "cost": 8.00},
+    {"from": "Union Station DC", "to": "NYC Penn Station", "mode": "Amtrak NE Regional", "travel_min": 210, "cost": 69.00},
+    {"from": "STAMP", "to": "Shuttle-UM 104 Commuter", "mode": "Bus", "travel_min": 15, "cost": 0.00}
+  ],
+  "weekend_trips": [
+    {"id": "wt_001", "name": "Harpers Ferry, WV", "drive_hours": 1.5, "highlights": ["AT trailhead", "historic town", "river kayak"]},
+    {"id": "wt_002", "name": "Shenandoah National Park", "drive_hours": 2.0, "highlights": ["Skyline drive", "hiking"]},
+    {"id": "wt_003", "name": "Philadelphia", "drive_hours": 2.5, "highlights": ["Reading Terminal", "museums", "cheesesteaks"]},
+    {"id": "wt_004", "name": "Rehoboth Beach, DE", "drive_hours": 2.5, "highlights": ["beach", "boardwalk"]},
+    {"id": "wt_005", "name": "Richmond, VA", "drive_hours": 2.0, "highlights": ["food scene", "street art", "James River"]}
+  ]
+}
