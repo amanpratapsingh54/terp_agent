@@ -115,10 +115,6 @@ Every service exposes a consistent shape: `GET /<service>` to browse, `GET /<ser
 
 Full auto-generated docs live at `/docs` once the server is running.
 
-## The Claude Cowork prompt
-
-See **[CLAUDE_COWORK_PROMPT.md](./CLAUDE_COWORK_PROMPT.md)**. Drop it into Claude Cowork as a skill prompt (or the system prompt of a custom Claude Agent SDK project) and point it at `TERP_AGENT_BASE_URL` — it will do the rest.
-
 ## Real-integration roadmap
 
 The dummy API mirrors the real UMD surfaces 1:1 so that replacing each router is a drop-in:
